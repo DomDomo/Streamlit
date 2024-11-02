@@ -1,9 +1,5 @@
 import streamlit as st
 from langchain_community.llms import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 st.title('🦜🔗 Quickstart App')
 
