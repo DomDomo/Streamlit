@@ -4,3 +4,4 @@ langchain
 langchain_community
 chromadb
 tiktoken
+PyPDF2
