@@ -13,6 +13,7 @@ from langchain.chains import RetrievalQA
 import PyPDF2
 
 APP_NAME = "📄 StatementWise 📄"
+OPEN_AI_KEY = st.secrets.API_KEY
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
@@ -39,25 +40,26 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 
 # Page title
 st.set_page_config(page_title=APP_NAME)
-st.title(APP_NAME)
+# st.title(APP_NAME)
+st.markdown(f"<h1 style='text-align: center'>{APP_NAME}</h1>", unsafe_allow_html=True)
 
 # File upload
 uploaded_file = st.file_uploader('Upload an article', type='pdf')
 # Query text
-query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
 # Form input and query
 result = []
-with st.form('myform', clear_on_submit=True):
-    # openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
-    openai_api_key = st.secrets.API_KEY
-    submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
-    if submitted and openai_api_key.startswith('sk-'):
+with st.form('myform', clear_on_submit=True): 
+    col1, col2 = st.columns([7, 1])
+    with col1:
+        query_text = st.text_input('Enter your question:', placeholder='Please provide a short summary.', disabled=not uploaded_file)
+    with col2:
+        st.markdown("<p style='margin-top: 27.5px;'></p>", unsafe_allow_html=True)
+        submitted = st.form_submit_button('Submit', disabled=not (uploaded_file))
+    if submitted and OPEN_AI_KEY.startswith('sk-'):
         with st.spinner('Calculating...'):
-            response = generate_response(uploaded_file, openai_api_key, query_text)
+            response = generate_response(uploaded_file, OPEN_AI_KEY, query_text)
             response_result = response["result"]
             result.append(response_result)
-            del openai_api_key
-
 if len(result):
     st.info(response_result)
