@@ -1,6 +1,8 @@
-__import__('pysqlite3')
 import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+if sys.platform.startswith('linux'):
+    __import__('pysqlite3')
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import streamlit as st
 from langchain_openai import OpenAI
@@ -10,7 +12,7 @@ from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 import PyPDF2
 
-APP_NAME = "📄 StatementWise"
+APP_NAME = "📄 StatementWise 📄"
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
