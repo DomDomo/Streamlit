@@ -3,5 +3,6 @@ openai
 langchain
 langchain_community
 chromadb
+opentelemetry
 tiktoken
 PyPDF2
