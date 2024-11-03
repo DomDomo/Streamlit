@@ -1,7 +1,7 @@
 import streamlit as st
-from langchain.llms import OpenAI
+from langchain_openai import OpenAI
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 import PyPDF2
@@ -27,7 +27,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         retriever = db.as_retriever()
         # Create QA chain
         qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-        return qa.run(query_text)
+        return qa.invoke(query_text)
 
 # Page title
 st.set_page_config(page_title='🦜🔗 Ask the Doc App')
@@ -47,8 +47,9 @@ with st.form('myform', clear_on_submit=True):
     if submitted and openai_api_key.startswith('sk-'):
         with st.spinner('Calculating...'):
             response = generate_response(uploaded_file, openai_api_key, query_text)
-            result.append(response)
+            response_result = response["result"]
+            result.append(response_result)
             del openai_api_key
 
 if len(result):
-    st.info(response)
+    st.info(response_result)
